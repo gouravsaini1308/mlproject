@@ -1,15 +1,19 @@
 import os
 import sys
 import pandas as pd
-from src.exception import customException
+from src.exception import CustomException
 from src.logger import logging
-
-
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 
-@dataclass
-class dataingestionconfig:
+## A dataclass is used to store data (variables) only.
+## The dataclass automatically creates the __init__() method for you.
+## It reduces code and is used when a class is only storing data/configuration.
+
+@dataclass  
+class DataIngestionConfig:   ## This class stores all file paths in one place.
     train_data_path: str=os.path.join('artifacts',"train.csv")
     test_data_path: str=os.path.join('artifacts',"test.csv")
     raw_data_path: str=os.path.join('artifacts',"raw.csv")
@@ -20,9 +24,9 @@ class dataingestionconfig:
     raw data
     '''
 
-class dataingestion:
+class DataIngestion:    ## This class contains the actual work of data ingestion.
     def __init__(self):
-        self.ingestion_config = dataingestionconfig()
+        self.ingestion_config = DataIngestionConfig()
 
     def initiate_data_ingestion(self):
         logging.info("Enter the data ingestion method or component")
@@ -48,9 +52,12 @@ class dataingestion:
             )
 
         except Exception as e:
-            raise customException(e,sys)
+            raise CustomException(e,sys)
 
 
 if __name__== "__main__":
-    obj=dataingestion()
-    obj.initiate_data_ingestion()
+    obj=DataIngestion()
+    train_data,test_data = obj.initiate_data_ingestion()
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data,test_data)
