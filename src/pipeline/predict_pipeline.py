@@ -18,8 +18,14 @@ class PredictPipeline:
             return preds
         
         except Exception as e:
-            raise CustomException(e,sys)
+            import traceback
 
+            print("============== ERROR ==============")
+            print(str(e))
+            traceback.print_exc()
+            print("===================================")
+
+            raise e
 
 class CustomData: 
     # The custom data class will be responsible in mapping all the inputs that we 
